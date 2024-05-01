@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2024 - Omnipro (https://www.omni.pro/)
+ *
+ * @author      Cesar Robledo <cesar.robledo@omni.pro>
+ * @date        25/04/2024, 16:00
+ * @category    Omnipro
+ * @module      Omnipro/DataMigration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Command -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="SyncCustomersData" xsi:type="object">Omnipro\DataMigration\Console\Command\SyncCustomersCommand</item>
+                <item name="SyncAddressData" xsi:type="object">Omnipro\DataMigration\Console\Command\SyncAddressCommand</item>
+                <item name="SyncProductsData" xsi:type="object">Omnipro\DataMigration\Console\Command\SyncProductsCommand</item>
+                <item name="SyncOrdersData" xsi:type="object">Omnipro\DataMigration\Console\Command\SyncOrdersCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Loggers -->
+    <type name="Omnipro\DataMigration\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Omnipro\DataMigration\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">omnipro_datamigration_debug</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Omnipro\DataMigration\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,57 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Copyright (c) 2024 - Omnipro (https://www.omni.pro/)
+ *
+ * @author      Cesar Robledo <cesar.robledo@omni.pro>
+ * @date        25/04/2024, 16:00
+ * @category    Omnipro
+ * @module      Omnipro/DataMigration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="omnipro" translate="label" sortOrder="110">
+            <label>Omnipro</label>
+        </tab>
+        <section id="omnipro" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <label>General Config</label>
+            <tab>omnipro</tab>
+            <resource>Omnipro_DataMigration::settings_datamigration</resource>
+            <group id="connection_general" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <label>Connection General</label>
+                <field id="host" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Host</label>
+                    <comment/>
+                </field>
+                <field id="database" type="text" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Database</label>
+                    <comment/>
+                </field>
+                <field id="user" type="text" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>User name</label>
+                    <comment/>
+                </field>
+                <field id="password" type="password" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Password</label>
+                    <comment/>
+                </field>
+            </group>
+            <group id="connection_ssh" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <label>Connection SSH tunnel</label>
+                <field id="host" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Host/IP</label>
+                    <comment/>
+                </field>
+                <field id="user" type="text" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>User name</label>
+                    <comment>Authentication Method: Password</comment>
+                </field>
+                <field id="password" type="password" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                    <label>Password</label>
+                    <comment/>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
