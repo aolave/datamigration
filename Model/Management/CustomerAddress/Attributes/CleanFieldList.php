@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Omnipro\DataMigration\Model\Management\Attributes;
+namespace Omnipro\DataMigration\Model\Management\CustomerAddress\Attributes;
 
 /**
  * This Clean array fields list
@@ -22,6 +22,9 @@ class CleanFieldList
 {
     public const GET = [
         'entity_id',
-        'custom_attributes'
+        'email',
+        'region',
+        'custom_attributes',
+        'sap'
     ];
 }

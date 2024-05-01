@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Omnipro\DataMigration\Model\Management\Attributes;
+namespace Omnipro\DataMigration\Model\Management\Common;
 
 /**
  * This Clean array fields
@@ -24,12 +24,13 @@ class Cleaner
      * Clean array fields
      *
      * @param array $data
+     * @param array $cleanList
      * @return array
      */
-    public static function clean(array $data) : array
+    public static function clean(array $data, array $cleanList) : array
     {
-        foreach (CleanFieldList::GET as $key) {
-            if (isset($data[$key])) {
+        foreach ($cleanList as $key) {
+            if (array_key_exists($key, $data)) {
                 unset($data[$key]);
             }
         }

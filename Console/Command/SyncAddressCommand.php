@@ -18,6 +18,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Omnipro\DataMigration\Model\Console;
+use Omnipro\DataMigration\Model\Synchronize\CustomerAddress as SynchronizeCustomerAddress;
 
 /**
  * This sync address Command
@@ -33,10 +35,12 @@ class SyncAddressCommand extends Command
     /**
      * Construct
      *
+     * @param SynchronizeCustomerAddress $synchronizeCustomerAddress
      * @param State $state
      * @param string|null $name
      */
     public function __construct(
+        protected SynchronizeCustomerAddress $synchronizeCustomerAddress,
         protected State $state,
         string $name = null
     )
@@ -53,6 +57,12 @@ class SyncAddressCommand extends Command
         OutputInterface $output
     ) {
         $this->state->setAreaCode(Area::AREA_CRONTAB);
+        $status = $this->synchronizeCustomerAddress->process();
+        Console::printTable(
+            $status->getHeaders(),
+            $status->getRows(),
+            $output
+        );
 
         return Command::SUCCESS;
     }

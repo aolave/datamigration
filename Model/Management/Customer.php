@@ -16,10 +16,13 @@ use Exception;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
+use Magento\Framework\Api\CustomAttributesDataInterface;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerialize;
 use Omnipro\DataMigration\Logger\Logger;
-use Omnipro\DataMigration\Model\Management\Attributes\Cleaner;
-use Omnipro\DataMigration\Model\Management\Attributes\CustomAttributeConverter;
+use Omnipro\DataMigration\Model\Management\Common\Cleaner;
+use Omnipro\DataMigration\Model\Management\Common\CustomAttributeConverter;
+use Omnipro\DataMigration\Model\Management\Customer\Attributes\CleanFieldList;
+use Omnipro\DataMigration\Model\Management\Customer\Attributes\Equivalences;
 use Omnipro\DataMigration\Model\Status;
 
 /**
@@ -57,16 +60,17 @@ class Customer
     {
         $result = Status::FAILURE;
 
-        if ($this->getCustomer($customerData['email'])) {
+        if ($this->getCustomer($customerData[CustomerInterface::EMAIL])) {
             return Status::EXISTS;
         }
 
         try
         {
             $customAttributes = CustomAttributeConverter::convert(
-                $this->jsonSerialize->unserialize($customerData['custom_attributes'])
+                $this->jsonSerialize->unserialize($customerData[CustomAttributesDataInterface::CUSTOM_ATTRIBUTES]),
+                Equivalences::GET
             );
-            $customerData = Cleaner::clean($customerData);
+            $customerData = Cleaner::clean($customerData, CleanFieldList::GET);
             $customer = $this->customerFactory->create([
                 'data' => $customerData
             ]);
@@ -92,7 +96,7 @@ class Customer
     {
         try {
             return $this->customerRepository->get($email);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return null;
         }
     }

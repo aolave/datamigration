@@ -10,17 +10,18 @@
 
 declare(strict_types=1);
 
-namespace Omnipro\DataMigration\Model\Management\Attributes;
+namespace Omnipro\DataMigration\Model\Management\Customer\Attributes;
 
 /**
- * This array equivalences
+ * This Clean array fields list
  *
- * @class Equivalences
+ * @class CleanFieldList
  * @version  1.0.3
  */
-class Equivalences
+class CleanFieldList
 {
-    //Array key attributes : key => value, olb_code_Attribute => new_code_attribute
     public const GET = [
+        'entity_id',
+        'custom_attributes'
     ];
 }

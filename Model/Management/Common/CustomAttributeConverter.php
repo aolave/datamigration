@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Omnipro\DataMigration\Model\Management\Attributes;
+namespace Omnipro\DataMigration\Model\Management\Common;
 
 /**
  * This custom attribute converter
@@ -24,14 +24,17 @@ class CustomAttributeConverter
      * Convert attributes
      *
      * @param array $oldCustomAttributes
+     * @param array $equivalences
      * @return array
      */
-    public static function convert(array $oldCustomAttributes): array
-    {
+    public static function convert(
+        array $oldCustomAttributes,
+        array $equivalences
+    ): array {
         $newCustomAttributes = [];
         foreach ($oldCustomAttributes as $oldAttributeKey => $oldAttributeValue) {
-            if (isset(Equivalences::GET[$oldAttributeKey])) {
-                $newAttributeKey = Equivalences::GET[$oldAttributeKey];
+            if (array_key_exists($oldAttributeKey, $equivalences)) {
+                $newAttributeKey = $equivalences[$oldAttributeKey];
                 $newCustomAttributes[$newAttributeKey] = $oldAttributeValue;
             }
         }

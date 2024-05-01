@@ -15,10 +15,10 @@ namespace Omnipro\DataMigration\Console\Command;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;
-use Omnipro\DataMigration\Model\Console;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Omnipro\DataMigration\Model\Console;
 use Omnipro\DataMigration\Model\Synchronize\Customer as SynchronizeCustomer;
 
 /**
