@@ -18,6 +18,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Omnipro\DataMigration\Model\Synchronize\Product as SynchronizeProduct;
 
 /**
  * This sync products command
@@ -33,10 +34,12 @@ class SyncProductsCommand extends Command
     /**
      * Construct
      *
+     * @param SynchronizeProduct $synchronizeProduct
      * @param State $state
      * @param string|null $name
      */
     public function __construct(
+        protected SynchronizeProduct $synchronizeProduct,
         protected State $state,
         string $name = null
     )
@@ -53,6 +56,7 @@ class SyncProductsCommand extends Command
         OutputInterface $output
     ) {
         $this->state->setAreaCode(Area::AREA_CRONTAB);
+        $status = $this->synchronizeProduct->process();
         return Command::SUCCESS;
     }
 
