@@ -28,9 +28,11 @@ class Config extends AbstractHelper
     public const XML_PATH_CONNECTION_GENERAL_DATABASE = 'connection_general/database';
     public const XML_PATH_CONNECTION_GENERAL_USER = 'connection_general/user';
     public const XML_PATH_CONNECTION_GENERAL_PASSWORD = 'connection_general/password';
+    public const XML_PATH_CONNECTION_GENERAL_PORT = 'connection_general/port';
     public const XML_PATH_CONNECTION_SSH_HOST = 'connection_ssh/host';
     public const XML_PATH_CONNECTION_SSH_USER = 'connection_ssh/user';
     public const XML_PATH_CONNECTION_SSH_PASSWORD = 'connection_ssh/password';
+    public const XML_PATH_CONNECTION_SSH_PORT = 'connection_ssh/port';
 
     /**
      * Get config value
@@ -118,6 +120,22 @@ class Config extends AbstractHelper
     }
 
     /**
+     * Get general connection port
+     *
+     * @param int|null $store
+     * @return string
+     */
+    public function getGeneralPort(int $store = null): string
+    {
+        $apiKey = $this->getValue(
+            self::XML_PATH_CONNECTION_GENERAL_PORT,
+            $store
+        ) ?? '';
+
+        return (string) $apiKey;
+    }
+
+    /**
      * Get ssh connection host
      *
      * @param int|null $store
@@ -159,6 +177,22 @@ class Config extends AbstractHelper
     {
         $apiKey = $this->getValue(
             self::XML_PATH_CONNECTION_SSH_PASSWORD,
+            $store
+        ) ?? '';
+
+        return (string) $apiKey;
+    }
+
+    /**
+     * Get ssh connection port
+     *
+     * @param int|null $store
+     * @return string
+     */
+    public function getSshPort(int $store = null): string
+    {
+        $apiKey = $this->getValue(
+            self::XML_PATH_CONNECTION_SSH_PORT,
             $store
         ) ?? '';
 

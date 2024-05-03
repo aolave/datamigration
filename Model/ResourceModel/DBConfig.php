@@ -42,18 +42,15 @@ class DBConfig
     public function get(): array
     {
         return [
-            'host'           => $this->config->getGeneralHost(),
-            'dbname'         => $this->config->getGeneralDatabase(),
-            'username'       => $this->config->getGeneralUser(),
-            'password'       => $this->config->getGeneralPassword(),
-            'model'          => 'mysql4',
-            'engine'         => 'innodb',
-            'initStatements' => 'SET NAMES utf8;',
-            'active'         => '1',
-            'profiler'       => [
-                'class'   => Profiler::class,
-                'enabled' => true,
-            ]
+            'db_host' => $this->config->getGeneralHost(),
+            'db_name' => $this->config->getGeneralDatabase(),
+            'db_user' => $this->config->getGeneralUser(),
+            'db_password' => $this->config->getGeneralPassword(),
+            'db_port' => $this->config->getGeneralPort(),
+            'ssh_host' => $this->config->getSshHost(),
+            'ssh_user' => $this->config->getSshUser(),
+            'ssh_password' => $this->config->getSshPassword(),
+            'ssh_port' => $this->config->getSshPort(),
         ];
     }
 }

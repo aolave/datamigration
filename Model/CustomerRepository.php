@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Omnipro\DataMigration\Model;
 
+use Exception;
 use Omnipro\DataMigration\Model\Query\Customer;
 use Omnipro\DataMigration\Model\ResourceModel\Connection;
 
@@ -40,6 +41,7 @@ class CustomerRepository
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws Exception
      */
     public function getList(int $page, int $pageSize)
     {
@@ -52,6 +54,7 @@ class CustomerRepository
      * Count customers
      *
      * @return int
+     * @throws Exception
      */
     public function count(): int
     {

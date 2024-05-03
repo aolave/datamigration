@@ -14,6 +14,8 @@ namespace Omnipro\DataMigration\Model\Synchronize;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Omnipro\DataMigration\Model\CustomerAddressRepository as OldCustomerAddressRepository;
 use Omnipro\DataMigration\Model\Management\CustomerAddress as CustomerAddressManagement;
 use Omnipro\DataMigration\Model\Status;
@@ -29,7 +31,7 @@ use Magento\Customer\Model\ResourceModel\Customer\Collection as CustomerCollecti
  */
 class CustomerAddress
 {
-    const PAGE_SIZE = 500;
+    const PAGE_SIZE = 1000;
     const PAGE_INIT = 1;
 
     /**
@@ -54,6 +56,8 @@ class CustomerAddress
      * Main process
      *
      * @return Status
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function process(): Status
     {

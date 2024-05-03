@@ -20,35 +20,43 @@
             <resource>Omnipro_DataMigration::settings_datamigration</resource>
             <group id="connection_general" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
                 <label>Connection General</label>
-                <field id="host" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="host" type="text" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
                     <label>Host</label>
                     <comment/>
                 </field>
-                <field id="database" type="text" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="database" type="text" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
                     <label>Database</label>
                     <comment/>
                 </field>
-                <field id="user" type="text" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="user" type="text" sortOrder="3" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
                     <label>User name</label>
                     <comment/>
                 </field>
-                <field id="password" type="password" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="password" type="password" sortOrder="4" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
                     <label>Password</label>
+                    <comment/>
+                </field>
+                <field id="port" type="text" sortOrder="5" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
+                    <label>Port</label>
                     <comment/>
                 </field>
             </group>
-            <group id="connection_ssh" sortOrder="20" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+            <group id="connection_ssh" sortOrder="11" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
                 <label>Connection SSH tunnel</label>
-                <field id="host" type="text" sortOrder="10" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="host" type="text" sortOrder="1" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
                     <label>Host/IP</label>
                     <comment/>
                 </field>
-                <field id="user" type="text" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="user" type="text" sortOrder="2" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
                     <label>User name</label>
                     <comment>Authentication Method: Password</comment>
                 </field>
-                <field id="password" type="password" sortOrder="15" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
+                <field id="password" type="password" sortOrder="3" showInWebsite="1" showInStore="1" showInDefault="1" translate="label">
                     <label>Password</label>
+                    <comment/>
+                </field>
+                <field id="port" type="text" sortOrder="4" showInWebsite="1" showInStore="1" showInDefault="1" translate="label" canRestore="1">
+                    <label>Port</label>
                     <comment/>
                 </field>
             </group>

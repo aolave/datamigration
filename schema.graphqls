@@ -1,0 +1,9 @@
+type Mutation {
+    addTipCheckout(input: addTipCheckoutDataInput!): addTipCheckoutData
+    @resolver(class: "Omnipro\\TipCheckoutGraphQL\\Model\\Resolver\\AddCartTip")
+    @doc(description: "Add a Tip Checkout.")
+
+    addTipOrder(input: addTipOrderDataInput!): addTipOrderData
+    @resolver(class: "Omnipro\\TipCheckoutGraphQL\\Model\\Resolver\\AddOrderTip")
+    @doc(description: "Add a Tip to Order.")
+}

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Omnipro\DataMigration\Model\Synchronize;
 
+use Exception;
 use Omnipro\DataMigration\Model\CustomerRepository as OldCustomerRepository;
 use Omnipro\DataMigration\Model\Management\Customer as CustomerManagement;
 use Omnipro\DataMigration\Model\Status;
@@ -25,7 +26,7 @@ use Omnipro\DataMigration\Model\Status;
  */
 class Customer
 {
-    const PAGE_SIZE = 500;
+    const PAGE_SIZE = 1000;
     const PAGE_INIT = 1;
 
     /**
@@ -46,6 +47,7 @@ class Customer
      * Main process
      *
      * @return Status
+     * @throws Exception
      */
     public function process(): Status
     {

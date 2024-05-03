@@ -13,15 +13,17 @@
     <default>
         <omnipro>
             <connection_general>
-                <host>localhost</host>
-                <database>magento</database>
-                <user>root</user>
-                <password>root</password>
+                <host>127.0.0.1</host>
+                <database>fda_www</database>
+                <user>store</user>
+                <password/>
+                <port>3306</port>
             </connection_general>
             <connection_ssh>
-                <host/>
-                <user/>
+                <host>172.29.34.46</host>
+                <user>farmacias_02</user>
                 <password/>
+                <port>22</port>
             </connection_ssh>
         </omnipro>
     </default>
