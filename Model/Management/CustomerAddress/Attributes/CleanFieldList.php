@@ -23,7 +23,6 @@ class CleanFieldList
     public const GET = [
         'entity_id',
         'email',
-        'region',
         'custom_attributes',
         'sap'
     ];

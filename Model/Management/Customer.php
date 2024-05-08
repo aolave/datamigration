@@ -59,31 +59,74 @@ class Customer
     public function create(array $customerData): string
     {
         $result = Status::FAILURE;
-
-        if ($this->getCustomer($customerData[CustomerInterface::EMAIL])) {
-            return Status::EXISTS;
-        }
-
         try
         {
-            $customAttributes = CustomAttributeConverter::convert(
-                $this->jsonSerialize->unserialize($customerData[CustomAttributesDataInterface::CUSTOM_ATTRIBUTES]),
-                Equivalences::GET
-            );
-            $customerData = Cleaner::clean($customerData, CleanFieldList::GET);
-            $customer = $this->customerFactory->create([
-                'data' => $customerData
-            ]);
-            foreach ($customAttributes as $attributeCode => $attributeValue) {
-                $customer->setCustomAttribute($attributeCode, $attributeValue);
-            }
-            $this->customerRepository->save($customer);
+            $customers[] = $this->customerFactory->create(['data' => $customerData]);
+
+            $this->customerRepository->saveMultiple($customers);
+
+
             $result = Status::SUCCESS;
         } catch (Exception $e) {
-            $this->logger->info( $e->getMessage());
+            $this->logger->info("Error processing customer with ID {$oldCustomerId}: " . $e->getMessage());
         }
 
         return $result;
+    }
+
+    /**
+     * Function check customer
+     *
+     * @param array $customerData
+     * @return bool
+     */
+    public function checkCustomer(array $customerData): bool
+    {
+        if ($this->getCustomer($customerData[CustomerInterface::EMAIL])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Function prepareCustomerData
+     *
+     * @param $customerRows
+     * @return CustomerInterface
+     */
+    public function prepareCustomerData($customerRows): CustomerInterface
+    {
+        foreach ($customerRows as $customerRow) {
+
+            if($this->checkCustomer($customerRow)){
+                continue;
+            };
+
+            $customAttributes = CustomAttributeConverter::convert(
+                $this->jsonSerialize->unserialize($customerRow[CustomAttributesDataInterface::CUSTOM_ATTRIBUTES]),
+                Equivalences::GET
+            );
+
+            $customerData = Cleaner::clean($customerRow, CleanFieldList::GET);
+            $customerData = $this->convertRequiredFields($customerData);
+
+            $customerData[Equivalences::CODE_GENDER] = Equivalences::OPTIONS[Equivalences::CODE_GENDER][(int)$customerData[Equivalences::CODE_GENDER]]?? 7;
+            $customerData[Equivalences::CODE_GROUPID] = Equivalences::OPTIONS[Equivalences::CODE_GROUPID][(int)$customerData[Equivalences::CODE_GROUPID]]?? 0;
+
+            $customer = $this->customerFactory->create([
+                'data' => $customerData
+            ]);
+
+            foreach ($customAttributes as $attributeCode => $attributeValue) {
+                $customer->setCustomAttribute($attributeCode, $attributeValue);
+            }
+
+
+
+        }
+
+        return $customer;
     }
 
     /**
@@ -99,5 +142,23 @@ class Customer
         } catch (Exception) {
             return null;
         }
+    }
+
+    /**
+     * Get value for required fields
+     *
+     * @param array $customerData
+     * @return array
+     */
+    private function convertRequiredFields(array $customerData): array
+    {
+        if (empty($customerData['firstname'])) {
+            $customerData['firstname'] = 'First name';
+        }
+        if (empty($customerData['lastname'])) {
+            $customerData['lastname'] = 'Last name';
+        }
+
+        return $customerData;
     }
 }

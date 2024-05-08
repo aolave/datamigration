@@ -54,7 +54,7 @@ class Connection
      */
     private function getConnection(): SSH2
     {
-        $ssh = new SSH2($this->config['ssh_host'] . ':' . $this->config['ssh_port']);
+        $ssh = new SSH2($this->config['ssh_host']);
 
         if (!$ssh->login($this->config['ssh_user'], $this->config['ssh_password'])) {
             throw new Exception('SSH login failed');
@@ -83,6 +83,8 @@ class Connection
         $result = [];
         $response = $this->sshRemoteMysql($query);
 
+        printf("--- Scrip response ---");
+
         if (!empty($response)) {
             $lines = explode("\n", trim($response));
             $header = array_shift($lines);
@@ -90,6 +92,10 @@ class Connection
 
             foreach ($lines as $line) {
                 $parts = explode("\t", $line);
+                 // Convert "NULL" strings to null
+                $parts = array_map(function($value) {
+                    return $value === "NULL" ? null : $value;
+                }, $parts);
                 $formatted_line = array_combine($keys, $parts);
                 $result[] = $formatted_line;
             }
@@ -164,6 +170,8 @@ class Connection
             $this->logger->info($e->getMessage());
             throw new Exception($e->getMessage());
         }
+
+        printf("--- Count ---: %s",  $count);
 
         return (int) $count;
     }

@@ -26,7 +26,7 @@ use Omnipro\DataMigration\Model\Status;
  */
 class Customer
 {
-    const PAGE_SIZE = 1000;
+    const PAGE_SIZE = 500;
     const PAGE_INIT = 1;
 
     /**
@@ -56,11 +56,13 @@ class Customer
         $page = self::PAGE_INIT;
         $this->status->setTotal($total);
         while ($page <= $totalPages) {
+
             $customerRows = $this->oldCustomerRepository->getList($page, self::PAGE_SIZE);
-            foreach ($customerRows as $customerRow) {
-                $result = $this->customerManagement->create($customerRow);
-                $this->status->increment($result);
-            }
+
+            $customersData[] = $this->customerManagement->prepareCustomerData($customerRows);
+
+            $result = $this->customerManagement->create($customersData);
+            $this->status->increment($result);
             $page++;
         }
 

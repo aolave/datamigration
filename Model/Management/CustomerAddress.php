@@ -17,6 +17,8 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Api\Data\RegionInterfaceFactory;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
 use Magento\Framework\Api\CustomAttributesDataInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerialize;
@@ -45,6 +47,8 @@ class CustomerAddress
      * @param AddressRepositoryInterface $addressRepository
      * @param AddressInterfaceFactory $addressFactory
      * @param JsonSerialize $jsonSerialize
+     * @param RegionCollectionFactory $regionCollectionFactory
+     * @param RegionInterfaceFactory $regionDataFactory
      * @param SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory
      * @param Logger $logger
      */
@@ -52,6 +56,8 @@ class CustomerAddress
         private AddressRepositoryInterface $addressRepository,
         private AddressInterfaceFactory $addressFactory,
         private JsonSerialize $jsonSerialize,
+        private RegionCollectionFactory $regionCollectionFactory,
+        private RegionInterfaceFactory $regionDataFactory,
         private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         private Logger $logger
     ) {
@@ -94,6 +100,9 @@ class CustomerAddress
         $result = Status::FAILURE;
         try
         {
+            $oldAddressId = $customerAddressData['entity_id'];
+            $regionName = $customerAddressData['region'] ?? null;
+
             if ($address = $this->getAddress($customerAddressData)) {
                 $this->customerAddress[] = $address;
                 return Status::EXISTS;
@@ -102,12 +111,31 @@ class CustomerAddress
                 $this->jsonSerialize->unserialize($customerAddressData[CustomAttributesDataInterface::CUSTOM_ATTRIBUTES]),
                 Equivalences::GET
             );
+            $customAttributes = $this->convertRequiredFields($customAttributes);
             $customerAddressData = Cleaner::clean($customerAddressData, CleanFieldList::GET);
             $address = $this->addressFactory->create([
                 'data' => $customerAddressData
             ]);
+
+            if($regionName) {
+                $regionId = $this->getRegionIdByName($regionName);
+                if ($regionId) {
+                    $customerAddressData['region_id'] = $regionId;
+                    
+                    $regionData = $this->regionDataFactory->create();
+                    $regionData->setRegionId($regionId);
+                    $regionData->setRegion($regionName);
+
+                    $address->setRegion($regionData);
+                    $address->setRegionId($regionId);
+                } else {
+                    $this->logger->info("No valid region found for: {$regionName}");
+                    return $result;
+                }
+            }
+
             $address->setCustomerId($customer->getId());
-            // TODO: VALID IF REGION IS EQUALS
+            
             //$address->setCountryId('CL');
             foreach ($customAttributes as $attributeCode => $attributeValue) {
                 $address->setCustomAttribute($attributeCode, $attributeValue);
@@ -116,7 +144,7 @@ class CustomerAddress
             $this->customerAddress[] = $address;
             $result = Status::SUCCESS;
         } catch (Exception $e) {
-            $this->logger->info($e->getMessage());
+            $this->logger->info("Error processing address with ID {$oldAddressId}: " .$e->getMessage());
         }
 
         return $result;
@@ -146,5 +174,51 @@ class CustomerAddress
         $addresses = $this->addressRepository->getList($searchCriteria)->getItems();
 
         return $addresses ? reset($addresses) : null;
+    }
+
+    /**
+     * Get region id
+     *
+     * @param string $regionName
+     * @return mixed
+     * @throws LocalizedException
+     */
+    protected function getRegionIdByName(string $regionName): mixed {
+        try {
+            $collection = $this->regionCollectionFactory->create()
+                ->addFieldToFilter('default_name', $regionName)
+                ->setPageSize(1)
+                ->getFirstItem();
+
+            return $collection->getId();
+        } catch (Exception $e) {
+            $this->logger->info("Error finding region ID: " . $e->getMessage());
+            
+            return null;
+        }
+    }
+
+    /**
+     * Get value for required fields
+     *
+     * @param array $addressData
+     * @return array
+     */
+    private function convertRequiredFields(array $addressData): array 
+    {
+        if(empty($addressData['external_number'])) {
+            $addressData['external_number'] = '000';
+        }
+        if (empty($addressData['between_first_street'])) {
+            $addressData['between_first_street'] = 'Your First Street';
+        }
+        if (empty($addressData['between_second_street'])) {
+            $addressData['between_second_street'] = 'Your Second Street';
+        }
+        if (empty($addressData['references'])) {
+            $addressData['references'] = 'NA';
+        }
+
+        return $addressData;
     }
 }

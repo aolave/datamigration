@@ -41,4 +41,31 @@ class CustomAttributeConverter
 
         return $newCustomAttributes;
     }
+
+    /** 
+     * Convert attributes that do not have equivalences*
+     * 
+     * @param array $oldCustomAttributes
+     * @param array $equivalences
+     * @return array
+    */
+    public static function convertNativeAttributes(
+        array $oldCustomAttributes,
+        array $equivalences): array {
+
+        $attributesWithoutEquivalence = [];
+        foreach ($oldCustomAttributes as $oldAttributeKey => $oldAttributeValue) {
+            // Check if the attribute key does NOT exist in the equivalences
+            if (!array_key_exists($oldAttributeKey, $equivalences)) {
+                // If it does not exist, add it to the new array
+                $attributesWithoutEquivalence[$oldAttributeKey] = $oldAttributeValue;
+            }
+        }
+
+        return $attributesWithoutEquivalence;
+    }
+
+    public static  function convertRequiredFields(array $fields) {
+
+    }
 }

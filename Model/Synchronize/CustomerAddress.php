@@ -32,7 +32,7 @@ use Magento\Customer\Model\ResourceModel\Customer\Collection as CustomerCollecti
 class CustomerAddress
 {
     const PAGE_SIZE = 1000;
-    const PAGE_INIT = 1;
+    const PAGE_INIT = 20;
 
     /**
      * Construct
@@ -65,7 +65,7 @@ class CustomerAddress
         $customerCollection = $this->getCollection();
         $total = $customerCollection->getSize();
         $totalPages = ceil($total / self::PAGE_SIZE);
-        $page = self::PAGE_INIT;
+        $page = 6000;//self::PAGE_INIT;
         $this->status->setTotal($totalAddress);
         while ($page <= $totalPages) {
             $collection = $this->loadCollection($customerCollection, $page, self::PAGE_SIZE);

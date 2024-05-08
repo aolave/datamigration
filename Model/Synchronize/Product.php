@@ -54,9 +54,9 @@ class Product
         $page = self::PAGE_INIT;
         $this->status->setTotal($total);
         while ($page <= $totalPages) {
-            $customerRows = $this->oldProductRepository->getList($page, self::PAGE_SIZE);
-            foreach ($customerRows as $customerRow) {
-                $result = $this->productManagement->create($customerRow);
+            $productRows = $this->oldProductRepository->getList($page, self::PAGE_SIZE);
+            foreach ($productRows as $productRow) {
+                $result = $this->productManagement->managerProduct($productRow);
                 $this->status->increment($result);
             }
             $page++;

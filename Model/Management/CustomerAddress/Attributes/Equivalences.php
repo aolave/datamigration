@@ -22,5 +22,16 @@ class Equivalences
 {
     //Array key attributes : key => value, olb_code_Attribute => new_code_attribute
     public const GET = [
+        'alias' => 'alias', //new in 2.4.6
+        'colonia' => 'colony',
+        'entrecalle1' => 'between_first_street',
+        'entrecalle2' => 'between_second_street',
+        'lat_long' => 'lat_long', //latitude,longitude
+        'latitude' => 'latitude',
+        'longitude' => 'longitude',
+        'municipio' => 'municipality',
+        'no_ext' => 'external_number',
+        'no_int' => 'internal_number',
+        'referencia' => 'references'
     ];
 }
