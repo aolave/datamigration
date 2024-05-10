@@ -79,7 +79,6 @@ class Customer
         }
 
         $resource = $this->resourceConnection->getConnection();
-        $resource->beginTransaction();
 
         try {
             $tableName = $resource->getTableName('customer_entity');
@@ -91,9 +90,7 @@ class Customer
                 $result = Status::SUCCESS;
             }
 
-            $resource->commit();
         } catch (Exception $e) {
-            $resource->rollBack();
             $this->logger->info("Error processing bulk Insert customer: " . $e->getMessage());
         }
 

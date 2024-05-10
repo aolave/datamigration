@@ -26,11 +26,9 @@ use Omnipro\DataMigration\Model\Status;
  */
 class Customer
 {
-    const PAGE_SIZE = 5000;
-    // const PAGE_INIT = 22001 //error key and part;
-    //const PAGE_INIT = 148070 //error registro vacios;
+    const PAGE_SIZE = 2500;
 
-    const PAGE_INIT = 148070;
+    const PAGE_INIT = 1;
 
     /**
      * Construct
