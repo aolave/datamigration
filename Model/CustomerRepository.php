@@ -43,9 +43,9 @@ class CustomerRepository
      * @return array
      * @throws Exception
      */
-    public function getList(int $page, int $pageSize)
+    public function getList(int $page, int $pageSize): array
     {
-        $query = sprintf(Customer::GET_LIST, $page, $pageSize);
+        $query = sprintf(Customer::GET_LIST, $pageSize, $page);
 
         return $this->connection->getData($query);
     }

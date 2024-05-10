@@ -21,7 +21,7 @@ namespace Omnipro\DataMigration\Model\Management\Customer\Attributes;
 class CleanFieldList
 {
     public const GET = [
-        'entity_id',
+        //'entity_id',
         'custom_attributes'
     ];
 }

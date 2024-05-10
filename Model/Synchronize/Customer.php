@@ -26,8 +26,11 @@ use Omnipro\DataMigration\Model\Status;
  */
 class Customer
 {
-    const PAGE_SIZE = 500;
-    const PAGE_INIT = 1;
+    const PAGE_SIZE = 5000;
+    // const PAGE_INIT = 22001 //error key and part;
+    //const PAGE_INIT = 148070 //error registro vacios;
+
+    const PAGE_INIT = 148070;
 
     /**
      * Construct
@@ -52,18 +55,33 @@ class Customer
     public function process(): Status
     {
         $total = $this->oldCustomerRepository->count();
-        $totalPages = ceil($total / self::PAGE_SIZE);
+        $totalPages = ceil($total);
         $page = self::PAGE_INIT;
+        $pageSize = self::PAGE_SIZE;
         $this->status->setTotal($total);
+
+
         while ($page <= $totalPages) {
 
-            $customerRows = $this->oldCustomerRepository->getList($page, self::PAGE_SIZE);
+            $dataCustomers = [];
+            $dataAttributes = [];
 
-            $customersData[] = $this->customerManagement->prepareCustomerData($customerRows);
+            $customerRows = $this->oldCustomerRepository->getList($page, $pageSize);
 
-            $result = $this->customerManagement->create($customersData);
+            foreach ($customerRows as $customerRow) {
+                $page++;
+
+                if($this->customerManagement->checkCustomer($customerRow)){
+                    continue;
+                }
+
+                $dataCustomers[] = $this->customerManagement->prepareCustomerData($customerRow);
+                $dataAttributes[] = $customerRow;
+            }
+
+            $result = $this->customerManagement->createMultiple($dataCustomers, $dataAttributes);
+
             $this->status->increment($result);
-            $page++;
         }
 
         return $this->status;

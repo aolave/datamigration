@@ -76,29 +76,42 @@ class Connection
      *
      * @param string $query
      * @return array
-     * @throws Exception
      */
     public function getMysqlData(string $query): array
     {
         $result = [];
-        $response = $this->sshRemoteMysql($query);
 
         printf("--- Scrip response ---");
 
-        if (!empty($response)) {
-            $lines = explode("\n", trim($response));
-            $header = array_shift($lines);
-            $keys = explode("\t", $header);
+        try {
+            $response = $this->sshRemoteMysql($query);
 
-            foreach ($lines as $line) {
-                $parts = explode("\t", $line);
-                 // Convert "NULL" strings to null
-                $parts = array_map(function($value) {
-                    return $value === "NULL" ? null : $value;
-                }, $parts);
-                $formatted_line = array_combine($keys, $parts);
-                $result[] = $formatted_line;
+            if (!empty($response)) {
+                $lines = explode("\n", trim($response));
+                $header = array_shift($lines);
+                $keys = explode("\t", $header);
+
+                foreach ($lines as $line) {
+                    $parts = explode("\t", $line);
+                    // Convert "NULL" strings to null
+                    $parts = array_map(function($value) {
+                        return $value === "NULL" ? null : $value;
+                    }, $parts);
+
+                    if (count($keys) === count($parts)) {
+                        $formatted_line = array_combine($keys, $parts);
+                        if ($formatted_line) {
+                            $result[] = $formatted_line;
+                        } else {
+                            $this->logger->info("Error combining keys and parts: " . print_r($keys, true) . ", " . print_r($parts, true));
+                        }
+                    } else {
+                        $this->logger->info("Mismatched keys and parts: " . print_r($keys, true) . ", " . print_r($parts, true));
+                    }
+                }
             }
+        } catch (Exception $e) {
+            $this->logger->info("Error processing getMysqlData: " . $e->getMessage());
         }
 
         return $result;
@@ -124,9 +137,11 @@ class Connection
             escapeshellarg($query)
         );
 
+        $result = $ssh->exec($command);
+
         return str_replace("mysql: [Warning] Using a password on the command line interface can be insecure.\n",
             '',
-            $ssh->exec($command)
+            $result
         );
     }
 
@@ -141,6 +156,7 @@ class Connection
     {
         try {
             $result = $this->getMysqlData($query);
+
             $rows = $result;
         } catch (Exception $e) {
             $this->logger->info($e->getMessage());
